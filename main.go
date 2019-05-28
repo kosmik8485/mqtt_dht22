@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/d2r2/go-dht"
 	logger "github.com/d2r2/go-logger"
+	"time"
 )
 
 var lg = logger.NewPackageLogger("main",
@@ -13,7 +14,7 @@ var lg = logger.NewPackageLogger("main",
 func main() {
 	
 	defer logger.FinalizeLogger()	
-	// logger.ChangePackageLogLevel("dht", logger.InfoLevel)
+	logger.ChangePackageLogLevel("dht", logger.InfoLevel)
 	
 	sensorType := dht.DHT22	
 	pin := 4
