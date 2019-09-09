@@ -1,42 +1,35 @@
 package main
 
 import (
+	"fmt"
 	"flag"
-	"github.com/d2r2/go-dht"
-
-	logger "github.com/d2r2/go-logger"
+	"github.com/MichaelS11/go-dht"
 )
 
 var (
-	lg = logger.NewPackageLogger("main",
-	logger.DebugLevel,
-	// logger.InfoLevel,
-	)
-	pin = flag.Int("pin", 4, "pin")
-)	
+	pin = flag.String("pin","GPIO4","pin format GPIOXX")
+)
 
 func main() {
 	flag.Parse()
-	defer logger.FinalizeLogger()
-
-	lg.Notify("***************************************************************************************************")
-	lg.Notify("*** You can change verbosity of output, to modify logging level of module \"dht\"")
-	lg.Notify("*** Uncomment/comment corresponding lines with call to ChangePackageLogLevel(...)")
-	lg.Notify("***************************************************************************************************")
-	// Uncomment/comment next line to suppress/increase verbosity of output
-	// logger.ChangePackageLogLevel("dht", logger.InfoLevel)
-
-	// sensorType := dht.DHT11
-	sensorType := dht.DHT22
-	// sensorType := dht.DHT12
-	// Read DHT11 sensor data from specific pin, retrying 10 times in case of failure.
-	pin := 4
-	temperature, humidity, retried, err :=
-		dht.ReadDHTxxWithRetry(sensorType, pin, false, 10)
+	err := dht.HostInit()
 	if err != nil {
-		lg.Fatal(err)
+		fmt.Println("HostInit error:", err)
+		return
 	}
-	// print temperature and humidity
-	lg.Infof("Sensor = %v: Temperature = %v*C, Humidity = %v%% (retried %d times)",
-		sensorType, temperature, humidity, retried)
+
+	dht, err := dht.NewDHT(pin, dht.Fahrenheit, "")
+	if err != nil {
+		fmt.Println("NewDHT error:", err)
+		return
+	}
+
+	humidity, temperature, err := dht.Read()
+	if err != nil {
+		fmt.Println("Read error:", err)
+		return
+	}
+
+	fmt.Printf("humidity: %v\n", humidity)
+	fmt.Printf("temperature: %v\n", temperature)
 }
