@@ -18,7 +18,7 @@ func main() {
 		return
 	}
 
-	dht, err := dht.NewDHT(pin, dht.Fahrenheit, "")
+	dht, err := dht.NewDHT(*pin, dht.Fahrenheit, "")
 	if err != nil {
 		fmt.Println("NewDHT error:", err)
 		return
