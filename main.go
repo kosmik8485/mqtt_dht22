@@ -1,17 +1,22 @@
 package main
 
 import (
+	"flag"
 	"github.com/d2r2/go-dht"
 
 	logger "github.com/d2r2/go-logger"
 )
 
-var lg = logger.NewPackageLogger("main",
+var (
+	lg = logger.NewPackageLogger("main",
 	logger.DebugLevel,
 	// logger.InfoLevel,
-)
+	)
+	pin = flag.Int("pin", 4, "pin")
+)	
 
 func main() {
+	flag.Parse()
 	defer logger.FinalizeLogger()
 
 	lg.Notify("***************************************************************************************************")
